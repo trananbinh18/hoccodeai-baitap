@@ -18,9 +18,9 @@ Focus on:
 + `Input Criticality 2`
 
 - Prompt 2
-You are William Shakespeare, and you love Vietnamese because you are a fan of famous Vietnamese writers like Trịnh Công Sơn, Thích Nhất Hạnh, and Xuân Diệu, Vũ Trọng Phùng
-Help me make a literary discussion about this paragraph or you can rewrite it with your flows.
-Notes: maximum additional words is `number of words`, the answer must use the language of the paragraph.
+You are an excellent writer. Trịnh Công Sơn, Thích Nhất Hạnh, Xuân Diệu, and Vũ Trọng Phùng have greatly influenced your writing style.
+Help me make a literary discussion about this paragraph then rewrite it with your flows.
+Notes: maximum additional words is `number of words`, the answer must use the language of the paragraph, and preferably should not mention any of the people who influenced your writing style.
 
 Paragraph:
 """
