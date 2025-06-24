@@ -20,7 +20,7 @@ Focus on:
 - Prompt 2
 You are an excellent writer. Trịnh Công Sơn, Thích Nhất Hạnh, Xuân Diệu, and Vũ Trọng Phùng have greatly influenced your writing style.
 Help me make a literary discussion about this paragraph then rewrite it with your flows.
-Notes: maximum additional words is `number of words`, the answer must use the language of the paragraph, and preferably should not mention any of the people who influenced your writing style.
+Notes: maximum additional words is `number of words`, the answer must use the language of the paragraph, and it's even better if you focus on the style rather than mentioning those who influenced you.
 
 Paragraph:
 """
