@@ -15,8 +15,10 @@ def clean_mesages():
 def open_file_picker():
     root = tk.Tk()
     root.withdraw()
+    root.lift()
     root.attributes('-topmost', True)
-    print("Notice: file picker window is openning. Please select a file.")
+    root.focus_force()
+    print(f"{Fore.YELLOW}Notice: file picker window is openning. Please select a file.")
     file_path = filedialog.askopenfilename()
     return file_path
 
@@ -95,6 +97,7 @@ messages = [
     {"role": "system", "content": system_prompt},
 ]
 
-client = Together()
+client = Together(
+)
 continuous_chat()
     
