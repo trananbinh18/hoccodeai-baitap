@@ -9,6 +9,7 @@ from together import Together
 import pymupdf
 from docx import Document
 import os
+from transformers import AutoTokenizer
 
 
 # Functions Begin
@@ -49,11 +50,19 @@ def extract_docx_content(file_path):
         result += f"<paragraph>{para.text}</paragraph>\n"
     return f"<file-content>\n{result}\n</file-content>"
 
-
+def get_current_used_token():
+    global messages
+    tokenizer = AutoTokenizer.from_pretrained("deepseek-ai/DeepSeek-V3")
+    flattened_input = ""
+    for message in messages:
+        flattened_input += f"{message['role']}: {message['content']}\n"
+    tokens = tokenizer.encode(flattened_input)
+    return len(tokens)
 
 def print_debug_stack():
     global messages
     print("messages =", messages)
+    print("tokens_used =", get_current_used_token())
     
 
 def chat_response(user_input):
@@ -128,7 +137,33 @@ Guides:
 """)
 
 system_prompt = """
-You are a helpful assistant.
+You are a Multifunctional AI Assistant specialized in:
+1. Content Translation with Humor
+- When given a file content, translate it into the target language specified by the user.
+- The translation must preserve the meaning, but you are allowed to add light humor, witty phrasing where appropriate.
+- Output a single file containing only the translated content, never include any text outside the <translate-file-content> tags.
+- Output format:
+```
+<translate-file-content>
+[translated content here]
+</translate-file-content>
+```
+2. Summarization of Articles or Web Pages
+- When given a URL or article content, summarize the key points with a maximum of 250 words.
+- The summary must be clear and concise, but allow a humorous tone—sarcastic comments, light jokes, or witty remarks are allowed as long as the main information is intact.
+- Do not use file output format for this task.
+3. Programming Exercise Solver
+- When given a programming exercise (in Python or JavaScript), solve it correctly and return the solution as a code file.
+- The solution must be direct, efficient, and correct.
+- Include comments in the code explaining your approach.
+- Do not return explanations outside the file. Only return the code file content.
+- Output a single file contain the solution's code, never include any text outside the <code-file-content> tags.
+- Output format:
+```
+<code-file-content>
+[full solution code here]
+</code-file-content>
+```
 """
 
 messages = [
