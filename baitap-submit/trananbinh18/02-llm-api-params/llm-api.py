@@ -6,6 +6,10 @@ from prompt_toolkit import prompt
 from prompt_toolkit.history import FileHistory
 from colorama import Fore, init, Back, Style
 from together import Together
+import pymupdf
+from docx import Document
+import os
+
 
 # Functions Begin
 def clean_mesages():
@@ -19,8 +23,33 @@ def open_file_picker():
     root.attributes('-topmost', True)
     root.focus_force()
     print(f"{Fore.YELLOW}Notice: file picker window is openning. Please select a file.")
-    file_path = filedialog.askopenfilename()
+    file_path = filedialog.askopenfilename(filetypes=[("PDF files", "*.pdf"), ("Text files", "*.txt"), ("Word files", "*.docx")])
     return file_path
+
+def extract_pdf_content(file_path):
+    result = ""
+    doc = pymupdf.open(file_path)
+    for page in doc:
+        content = page.get_text()
+        result += f"<page-{page.number}>{content}</page-{page.number}>"
+        result += "\n"
+    return f"<file-content>\n{result}\n</file-content>"
+
+def extract_txt_content(file_path):
+    result = ""
+    with open(file_path, 'r', encoding='utf-8') as file:
+        content = file.read()
+        result += f"<file-content>\n{content}\n</file-content>"
+    return result
+
+def extract_docx_content(file_path):
+    result = ""
+    doc = Document(file_path)
+    for para in doc.paragraphs:
+        result += f"<paragraph>{para.text}</paragraph>\n"
+    return f"<file-content>\n{result}\n</file-content>"
+
+
 
 def print_debug_stack():
     global messages
@@ -59,7 +88,16 @@ def continuous_chat():
             case "file":
                 file_path = open_file_picker()
                 if file_path:
-                    print(f"Selected file: '{file_path}' attached to the message.")
+                    file_ext = os.path.splitext(file_path)[1].lower()
+                    if file_ext == '.pdf':
+                        user_input += extract_pdf_content(file_path)
+                    if file_ext == '.txt':
+                        user_input += extract_txt_content(file_path)
+                    if file_ext == '.docx':
+                        user_input += extract_docx_content(file_path)
+                    
+                    print(f"Selected file: '{file_path}' and attached to your message.")
+                    messages.append({"role": "user", "content": "Attached file: \n"+ user_input})
                 else:
                     print("No file selected.")
                 continue
